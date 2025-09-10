@@ -4,76 +4,76 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color tokens to match modern dashboard design brief */
+  /* Updated color tokens for Molinos Indelma brand (red and gold) */
   --background: #ffffff;
-  --foreground: #1f2937;
-  --card: #f1f5f9;
-  --card-foreground: #374151;
+  --foreground: #c8102e;
+  --card: #f8f8f8;
+  --card-foreground: #c8102e;
   --popover: #ffffff;
-  --popover-foreground: #1f2937;
-  --primary: #1f2937;
+  --popover-foreground: #374151;
+  --primary: #c8102e;
   --primary-foreground: #ffffff;
-  --secondary: #8b5cf6;
-  --secondary-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #6b7280;
-  --accent: #8b5cf6;
-  --accent-foreground: #ffffff;
-  --destructive: #dc2626;
+  --secondary: #ffd700;
+  --secondary-foreground: #374151;
+  --muted: #f8f8f8;
+  --muted-foreground: #374151;
+  --accent: #ffd700;
+  --accent-foreground: #c8102e;
+  --destructive: #ff4d4d;
   --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #f1f5f9;
-  --ring: #8b5cf6;
-  --chart-1: #4f46e5;
-  --chart-2: #3b82f6;
-  --chart-3: #fbbf24;
-  --chart-4: #22c55e;
-  --chart-5: #ef4444;
+  --border: #e5e5e5;
+  --input: #ffffff;
+  --ring: rgba(200, 16, 46, 0.5);
+  --chart-1: #c8102e;
+  --chart-2: #ffd700;
+  --chart-3: #f8f8f8;
+  --chart-4: #b0b0b0;
+  --chart-5: #e5e5e5;
   --radius: 0.5rem;
-  --sidebar: #f1f5f9;
-  --sidebar-foreground: #1f2937;
-  --sidebar-primary: #8b5cf6;
+  --sidebar: #f8f8f8;
+  --sidebar-foreground: #c8102e;
+  --sidebar-primary: #ffd700;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #dc2626;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #8b5cf6;
+  --sidebar-accent: #c8102e;
+  --sidebar-accent-foreground: #ffd700;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: rgba(200, 16, 46, 0.5);
 }
 
 .dark {
-  /* Updated dark mode tokens to complement the modern theme */
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-  --card: #1e293b;
-  --card-foreground: #f1f5f9;
-  --popover: #1e293b;
-  --popover-foreground: #f1f5f9;
-  --primary: #8b5cf6;
+  /* Updated dark mode tokens for Molinos Indelma */
+  --background: #1a1a1a;
+  --foreground: #ffd700;
+  --card: #2a2a2a;
+  --card-foreground: #ffd700;
+  --popover: #2a2a2a;
+  --popover-foreground: #ffd700;
+  --primary: #c8102e;
   --primary-foreground: #ffffff;
-  --secondary: #6366f1;
-  --secondary-foreground: #ffffff;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #8b5cf6;
-  --accent-foreground: #ffffff;
-  --destructive: #dc2626;
-  --destructive-foreground: #f1f5f9;
-  --border: #334155;
-  --input: #1e293b;
-  --ring: #8b5cf6;
-  --chart-1: #6366f1;
-  --chart-2: #3b82f6;
-  --chart-3: #fbbf24;
-  --chart-4: #22c55e;
-  --chart-5: #ef4444;
-  --sidebar: #0f172a;
-  --sidebar-foreground: #f1f5f9;
-  --sidebar-primary: #8b5cf6;
+  --secondary: #ffd700;
+  --secondary-foreground: #1a1a1a;
+  --muted: #2a2a2a;
+  --muted-foreground: #b0b0b0;
+  --accent: #ffd700;
+  --accent-foreground: #c8102e;
+  --destructive: #ff4d4d;
+  --destructive-foreground: #ffffff;
+  --border: #404040;
+  --input: #2a2a2a;
+  --ring: rgba(200, 16, 46, 0.5);
+  --chart-1: #c8102e;
+  --chart-2: #ffd700;
+  --chart-3: #f8f8f8;
+  --chart-4: #b0b0b0;
+  --chart-5: #e5e5e5;
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #ffd700;
+  --sidebar-primary: #c8102e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e293b;
-  --sidebar-accent-foreground: #f1f5f9;
-  --sidebar-border: #334155;
-  --sidebar-ring: #8b5cf6;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffd700;
+  --sidebar-border: #404040;
+  --sidebar-ring: rgba(200, 16, 46, 0.5);
 }
 
 @theme inline {
@@ -124,4 +124,64 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Updated animations for Molinos Indelma welcome screen */
+@keyframes gentle-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes soft-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(200, 16, 46, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(200, 16, 46, 0.4);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gentle-float {
+  animation: gentle-float 4s ease-in-out infinite;
+}
+
+.animate-soft-glow {
+  animation: soft-glow 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 8s ease infinite;
 }

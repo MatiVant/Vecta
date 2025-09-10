@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Search, Package, Plus, Minus, Trash2, ArrowLeft, ChevronDown, List } from "lucide-react"
+import { Search, Package, Plus, Minus, Trash2, ArrowLeft, ChevronDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { Label } from "./ui/label"
 import { Badge } from "./ui/badge"
+import { fetchWithFallback } from "../lib/api-utils"
 import type { Client, Product, OrderItem } from "./order-form"
 
 interface ProductSelectorProps {
@@ -15,6 +16,12 @@ interface ProductSelectorProps {
   onBack: () => void
   initialItems: OrderItem[]
 }
+
+const mockProducts: Product[] = [
+  { id: 1, code: "PROD001", name: "Producto Ejemplo 1" },
+  { id: 2, code: "PROD002", name: "Producto Ejemplo 2" },
+  { id: 3, code: "PROD003", name: "Producto Ejemplo 3" },
+]
 
 export function ProductSelector({ client, onProductsComplete, onBack, initialItems }: ProductSelectorProps) {
   const [searchTerm, setSearchTerm] = useState("")
@@ -27,24 +34,15 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true)
-      try {
-        const response = await fetch("/api/products")
-        if (response.ok) {
-          const data = await response.json()
-          setProducts(data)
-        } else {
-          throw new Error("Failed to fetch products")
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error)
-        setProducts([
-          { id: 1, code: "PROD001", name: "Producto Ejemplo 1" },
-          { id: 2, code: "PROD002", name: "Producto Ejemplo 2" },
-          { id: 3, code: "PROD003", name: "Producto Ejemplo 3" },
-        ])
-      } finally {
-        setLoading(false)
-      }
+
+      const result = await fetchWithFallback({
+        endpoint: "/products", // Using endpoint instead of API route, now consistent with client-selector
+        mockData: mockProducts,
+        errorMessage: "Error al cargar productos",
+      })
+
+      setProducts(result.data)
+      setLoading(false)
     }
 
     fetchProducts()
@@ -150,7 +148,6 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
                 className="px-3 bg-transparent"
                 title="Ver todos los productos"
               >
-                
                 <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${showAllProducts ? "rotate-180" : ""}`} />
               </Button>
             </div>

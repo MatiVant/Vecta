@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Search, User, Phone, MapPin, FileText, Check, Edit, ChevronDown, List } from "lucide-react"
+import { Search, User, Phone, MapPin, FileText, Check, Edit, ChevronDown } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
+import { fetchWithFallback } from "../lib/api-utils"
 import type { Client } from "./order-form"
 
 interface ClientSelectorProps {
@@ -55,33 +56,17 @@ export function ClientSelector({ onClientSelect, selectedClient }: ClientSelecto
   useEffect(() => {
     const fetchClients = async () => {
       setLoading(true)
-      setConnectionError(false)
-      setUsingMockData(false)
 
-      try {
-        const url = "http://localhost:3001/bpartners"
-        console.log("[v0] Attempting to fetch from:", url)
+      const result = await fetchWithFallback({
+        endpoint: "/bpartners", // Using endpoint instead of full URL
+        mockData: mockClients,
+        errorMessage: "No se puede conectar al servidor",
+      })
 
-        const response = await fetch(url)
-        console.log("[v0] Response status:", response.status)
-
-        if (response.ok) {
-          const data = await response.json()
-          console.log("[v0] Received data:", data)
-          setClients(data)
-        } else {
-          console.log("[v0] Response not ok, using mock data")
-          setClients(mockClients)
-          setUsingMockData(true)
-        }
-      } catch (error) {
-        console.error("[v0] Fetch failed, using mock data:", error.message)
-        setClients(mockClients)
-        setUsingMockData(true)
-        setConnectionError(false) // No mostrar error, solo usar mock
-      } finally {
-        setLoading(false)
-      }
+      setClients(result.data)
+      setUsingMockData(result.usingMockData)
+      setConnectionError(result.connectionError)
+      setLoading(false)
     }
 
     fetchClients()
@@ -164,7 +149,7 @@ export function ClientSelector({ onClientSelect, selectedClient }: ClientSelecto
         {usingMockData && (
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-sm text-blue-800">
-              <strong>Modo de desarrollo:</strong> Usando datos de prueba. 
+              <strong>Modo de desarrollo:</strong> Usando datos de prueba.
             </p>
           </div>
         )}
@@ -193,7 +178,6 @@ export function ClientSelector({ onClientSelect, selectedClient }: ClientSelecto
                 className="px-3 bg-transparent"
                 title="Ver todos los clientes"
               >
-                
                 <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${showAllClients ? "rotate-180" : ""}`} />
               </Button>
             </div>

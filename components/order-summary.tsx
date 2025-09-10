@@ -84,11 +84,38 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
   }
 
   const generateClientSidePDF = () => {
+    const canvas = document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+    const img = new Image()
+
+    img.onload = () => {
+      canvas.width = img.width
+      canvas.height = img.height
+      ctx?.drawImage(img, 0, 0)
+      const logoBase64 = canvas.toDataURL("image/png")
+
+      generatePDFWithLogo(logoBase64)
+    }
+
+    img.onerror = () => {
+      // Fallback: generate PDF without logo if image fails to load
+      generatePDFWithLogo("")
+    }
+
+    img.crossOrigin = "anonymous"
+    img.src = "/images/indelma-logo.png"
+  }
+
+  const generatePDFWithLogo = (logoBase64: string) => {
     // Create a new window with the order content for printing
     const printWindow = window.open("", "_blank")
     if (printWindow) {
       const orderDate = new Date().toLocaleDateString("es-ES")
       const orderTime = new Date().toLocaleTimeString("es-ES")
+
+      const logoHtml = logoBase64
+        ? `<img src="${logoBase64}" alt="Molinos Indelma" class="logo" />`
+        : `<div class="logo-placeholder" style="width: 80px; height: 60px; background: #dc2626; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">INDELMA</div>`
 
       printWindow.document.write(`
         <!DOCTYPE html>
@@ -97,9 +124,45 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
           <title>Pedido - ${client.name}</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 20px; color: #374151; }
-            .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #15803d; padding-bottom: 20px; }
+            .header { 
+              position: relative;
+              margin-bottom: 30px; 
+              border-bottom: 2px solid #dc2626; 
+              padding-bottom: 20px; 
+              min-height: 80px;
+            }
+            .logo { 
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 140px; 
+              height: auto; 
+            }
+            .logo-placeholder {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 140px; 
+              height: 60px; 
+              background: #dc2626; 
+              border-radius: 5px; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center; 
+              color: white; 
+              font-weight: bold; 
+              font-size: 12px;
+            }
+            .header-text {
+              text-align: center;
+              width: 100%;
+            }
             .client-info, .order-items { margin-bottom: 30px; }
-            .client-info h3, .order-items h3 { color: #15803d; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; }
+            .client-info h3, .order-items h3 { 
+              color: #dc2626; 
+              border-bottom: 1px solid #d1d5db; 
+              padding-bottom: 10px; 
+            }
             .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
             .info-item { margin-bottom: 10px; }
             .info-label { font-weight: bold; color: #6b7280; font-size: 12px; }
@@ -108,17 +171,33 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             .item-header { display: flex; justify-content: space-between; align-items: center; }
             .item-name { font-weight: bold; }
             .item-code { color: #6b7280; font-size: 14px; }
-            .quantity { font-weight: bold; color: #15803d; }
-            .summary { background-color: #f0fdf4; padding: 20px; border-radius: 5px; text-align: center; }
-            .total { font-size: 18px; font-weight: bold; color: #15803d; }
-            .footer { margin-top: 40px; text-align: center; color: #6b7280; font-size: 12px; }
+            .quantity { font-weight: bold; color: #dc2626; }
+            .summary { 
+              background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%); 
+              padding: 20px; 
+              border-radius: 5px; 
+              text-align: center; 
+              border: 1px solid #f59e0b;
+            }
+            .total { font-size: 18px; font-weight: bold; color: #dc2626; }
+            .footer { 
+              margin-top: 40px; 
+              text-align: center; 
+              color: #6b7280; 
+              font-size: 12px; 
+              border-top: 1px solid #dc2626;
+              padding-top: 20px;
+            }
           </style>
         </head>
         <body>
           <div class="header">
-            <h1>PEDIDO</h1>
-            <p>Fecha: ${orderDate} - Hora: ${orderTime}</p>
-            ${orderResponse?.id ? `<p>ID: ${orderResponse.id}</p>` : ""}
+            ${logoHtml}
+            <div class="header-text">
+              <h1 style="color: #dc2626; margin: 0;">PEDIDO</h1>
+              <p style="margin: 5px 0;">Fecha: ${orderDate} - Hora: ${orderTime}</p>
+              ${orderResponse?.id ? `<p style="margin: 5px 0;">ID: ${orderResponse.id}</p>` : ""}
+            </div>
           </div>
           
           <div class="client-info">
@@ -200,6 +279,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
           </div>
           
           <div class="footer">
+            <p><strong>Molinos Indelma</strong></p>
             <p>Pedido generado el ${orderDate} a las ${orderTime}</p>
             <p>Sistema de Gestión de Pedidos</p>
           </div>
