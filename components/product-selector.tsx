@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Search, Package, Plus, Minus, Trash2, ArrowLeft } from "lucide-react"
+import { Search, Package, Plus, Minus, Trash2, ArrowLeft, ChevronDown, List } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
@@ -22,21 +22,21 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
   const [orderItems, setOrderItems] = useState<OrderItem[]>(initialItems)
   const [loading, setLoading] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [showAllProducts, setShowAllProducts] = useState(false)
 
-  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true)
       try {
-        // Assuming products endpoint exists at localhost:3000/products
-        const response = await fetch("http://localhost:3000/products")
+        const response = await fetch("/api/products")
         if (response.ok) {
           const data = await response.json()
           setProducts(data)
+        } else {
+          throw new Error("Failed to fetch products")
         }
       } catch (error) {
         console.error("Error fetching products:", error)
-        // Mock data for development
         setProducts([
           { id: 1, code: "PROD001", name: "Producto Ejemplo 1" },
           { id: 2, code: "PROD002", name: "Producto Ejemplo 2" },
@@ -50,8 +50,11 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
     fetchProducts()
   }, [])
 
-  // Filter products based on search term
   const filteredProducts = useMemo(() => {
+    if (showAllProducts) {
+      return products.slice(0, 10)
+    }
+
     if (!searchTerm.trim()) return []
 
     return products
@@ -61,7 +64,7 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
           product.code?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
       .slice(0, 5)
-  }, [products, searchTerm])
+  }, [products, searchTerm, showAllProducts])
 
   const handleProductSelect = (product: Product) => {
     const existingItem = orderItems.find((item) => item.product.id === product.id)
@@ -76,6 +79,13 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
 
     setSearchTerm("")
     setShowSuggestions(false)
+    setShowAllProducts(false)
+  }
+
+  const toggleShowAllProducts = () => {
+    setShowAllProducts(!showAllProducts)
+    setShowSuggestions(false)
+    setSearchTerm("")
   }
 
   const updateQuantity = (productId: number, newQuantity: number) => {
@@ -117,37 +127,62 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
             <Label htmlFor="product-search" className="text-sm font-medium">
               Buscar Producto
             </Label>
-            <div className="relative mt-2">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                id="product-search"
-                type="text"
-                placeholder="Buscar por nombre o código..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onFocus={() => setShowSuggestions(true)}
-                className="pl-10"
-              />
+            <div className="flex gap-2 mt-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="product-search"
+                  type="text"
+                  placeholder="Buscar por nombre o código..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value)
+                    setShowSuggestions(true)
+                    setShowAllProducts(false)
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  className="pl-10"
+                />
+              </div>
+              <Button
+                variant="outline"
+                onClick={toggleShowAllProducts}
+                className="px-3 bg-transparent"
+                title="Ver todos los productos"
+              >
+                
+                <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${showAllProducts ? "rotate-180" : ""}`} />
+              </Button>
             </div>
 
-            {/* Suggestions Dropdown */}
-            {showSuggestions && searchTerm && (
+            {((showSuggestions && searchTerm) || showAllProducts) && (
               <div className="absolute z-10 w-full mt-1 bg-popover border border-border rounded-md shadow-lg max-h-60 overflow-auto">
                 {loading ? (
                   <div className="p-4 text-center text-muted-foreground">Cargando productos...</div>
                 ) : filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
-                    <button
-                      key={product.id}
-                      onClick={() => handleProductSelect(product)}
-                      className="w-full text-left p-3 hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0 transition-colors"
-                    >
-                      <div className="font-medium">{product.name}</div>
-                      <div className="text-sm text-muted-foreground">Código: {product.code}</div>
-                    </button>
-                  ))
+                  <>
+                    {showAllProducts && (
+                      <div className="p-2 bg-muted/50 border-b border-border">
+                        <p className="text-xs text-muted-foreground font-medium">
+                          Todos los productos ({products.length} total)
+                        </p>
+                      </div>
+                    )}
+                    {filteredProducts.map((product) => (
+                      <button
+                        key={product.id}
+                        onClick={() => handleProductSelect(product)}
+                        className="w-full text-left p-3 hover:bg-accent hover:text-accent-foreground border-b border-border last:border-b-0 transition-colors"
+                      >
+                        <div className="font-medium">{product.name}</div>
+                        <div className="text-sm text-muted-foreground">Código: {product.code}</div>
+                      </button>
+                    ))}
+                  </>
                 ) : (
-                  <div className="p-4 text-center text-muted-foreground">No se encontraron productos</div>
+                  <div className="p-4 text-center text-muted-foreground">
+                    {showAllProducts ? "No hay productos disponibles" : "No se encontraron productos"}
+                  </div>
                 )}
               </div>
             )}

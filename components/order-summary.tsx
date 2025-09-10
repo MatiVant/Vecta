@@ -37,7 +37,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
         createdAt: new Date().toISOString(),
       }
 
-      const response = await fetch("http://localhost:3000/orders", {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,10 +50,13 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
         setOrderResponse(responseData)
         setOrderSubmitted(true)
       } else {
-        console.error("Error submitting order")
+        const errorData = await response.json()
+        console.error("Error submitting order:", errorData)
+        alert(errorData.message || "Error al enviar el pedido")
       }
     } catch (error) {
       console.error("Error submitting order:", error)
+      alert("Error de conexión. Verifica tu conexión a internet.")
     } finally {
       setIsSubmitting(false)
     }
@@ -260,7 +263,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
               <h3 className="font-medium">Información del Cliente</h3>
             </div>
 
-            <Card className="bg-muted/50">
+            <Card className="bg-blue-50/50 border-blue-100">
               <CardContent className="pt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -293,7 +296,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
             <div className="space-y-3">
               {orderItems.map((item) => (
-                <Card key={item.product.id} className="bg-muted/50">
+                <Card key={item.product.id} className="bg-gray-50/50 border-gray-200">
                   <CardContent className="pt-4">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -313,10 +316,10 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
           <Separator />
 
           {/* Order Summary */}
-          <div className="bg-primary/5 p-4 rounded-lg">
+          <div className="bg-green-50/50 border border-green-200 p-4 rounded-lg">
             <div className="flex justify-between items-center">
               <span className="font-medium">Total de Productos:</span>
-              <span className="font-bold text-lg">{totalItems}</span>
+              <span className="font-bold text-lg text-green-700">{totalItems}</span>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
               * Los precios se calcularán según la lista de precios vigente
