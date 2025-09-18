@@ -313,9 +313,9 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             </div>
           )}
 
-          <Button className="w-full" onClick={handleDownloadPDF}>
+          <Button className="w-full text-sm" onClick={handleDownloadPDF}>
             <Download className="w-4 h-4 mr-2" />
-            Descargar PDF del Pedido
+            Descargar PDF 
           </Button>
 
           <Button variant="outline" onClick={() => window.location.reload()}>
@@ -330,17 +330,36 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5" />
-            Resumen del Pedido
-          </CardTitle>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              Resumen del Pedido
+            </CardTitle>
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <User className="w-3 h-3" />
+                <span className="text-xs">Cliente</span>
+              </div>
+              <span className="hidden sm:inline">→</span>
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Package className="w-3 h-3" />
+                <span className="text-xs">Productos</span>
+              </div>
+              <span className="hidden sm:inline">→</span>
+              <div className="flex items-center gap-1 text-primary font-medium">
+                <FileText className="w-3 h-3" />
+                <span className="text-xs">Resumen</span>
+              </div>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Client Information */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <User className="w-4 h-4" />
-              <h3 className="font-medium">Información del Cliente</h3>
+              <h3 className="font-medium">Cliente</h3>
             </div>
 
             <Card className="bg-blue-50/50 border-blue-100">
@@ -367,7 +386,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Package className="w-4 h-4" />
-                <h3 className="font-medium">Productos del Pedido</h3>
+                <h3 className="font-medium">Productos</h3>
               </div>
               <Badge variant="secondary">
                 {totalItems} {totalItems === 1 ? "producto" : "productos"}
@@ -378,13 +397,19 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
               {orderItems.map((item) => (
                 <Card key={item.product.id} className="bg-gray-50/50 border-gray-200">
                   <CardContent className="pt-4">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h4 className="font-medium">{item.product.name}</h4>
-                        <p className="text-sm text-muted-foreground">Código: {item.product.code}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">Cantidad: {item.quantity}</p>
+                    {/* Mobile-first vertical layout */}
+                    <div className="space-y-2">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm sm:text-base">{item.product.name}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground">Código: {item.product.code}</p>
+                        </div>
+                        <div className="flex items-center justify-between sm:justify-end sm:flex-col sm:items-end gap-2">
+                          <span className="text-xs text-muted-foreground sm:hidden">Cantidad:</span>
+                          <Badge variant="outline" className="font-medium">
+                            {item.quantity} {item.quantity === 1 ? "unidad" : "unidades"}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -397,7 +422,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
           {/* Order Summary */}
           <div className="bg-green-50/50 border border-green-200 p-4 rounded-lg">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
               <span className="font-medium">Total de Productos:</span>
               <span className="font-bold text-lg text-green-700">{totalItems}</span>
             </div>
@@ -409,13 +434,13 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
       </Card>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+      <div className="flex flex-col sm:flex-row justify-between gap-3">
+        <Button variant="outline" onClick={onBack} className="order-2 sm:order-1 bg-transparent">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver a Productos
         </Button>
 
-        <Button onClick={handleSubmitOrder} disabled={isSubmitting} className="min-w-32">
+        <Button onClick={handleSubmitOrder} disabled={isSubmitting} className="min-w-32 order-1 sm:order-2">
           {isSubmitting ? "Guardando..." : "Confirmar Pedido"}
         </Button>
       </div>

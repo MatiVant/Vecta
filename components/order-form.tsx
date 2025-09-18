@@ -6,8 +6,7 @@ import { ProductSelector } from "./product-selector"
 import { OrderSummary } from "./order-summary"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
-import { Button } from "./ui/button"
-import { ArrowLeft, User, Package, FileText } from "lucide-react"
+import { User, Package, FileText } from "lucide-react"
 
 export type Client = {
   id: number
@@ -84,7 +83,7 @@ export function OrderForm() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <h1 className="text-2xl font-bold text-foreground">Nuevo Pedido</h1>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <div className="hidden sm:flex items-center space-x-2 text-sm text-muted-foreground">
                 <div
                   className={`flex items-center space-x-1 ${currentStep === "client" ? "text-primary font-medium" : ""}`}
                 >
@@ -116,26 +115,28 @@ export function OrderForm() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              {currentStep === "products" && (
-                <Button
-                  variant="outline"
-                  onClick={handleBackToClient}
-                  className="flex items-center space-x-2 bg-transparent"
+            <div className="sm:hidden flex flex-col space-y-1 text-xs text-muted-foreground">
+              <div
+                className={`flex items-center space-x-1 ${currentStep === "client" ? "text-primary font-medium" : ""}`}
+              >
+                <User className="w-3 h-3" />
+                <span>Cliente</span>
+              </div>
+              {selectedClient && (
+                <div
+                  className={`flex items-center space-x-1 ${currentStep === "products" ? "text-primary font-medium" : ""}`}
                 >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Cambiar Cliente</span>
-                </Button>
+                  <Package className="w-3 h-3" />
+                  <span>Productos</span>
+                </div>
               )}
-              {currentStep === "summary" && (
-                <Button
-                  variant="outline"
-                  onClick={handleBackToProducts}
-                  className="flex items-center space-x-2 bg-transparent"
+              {orderItems.length > 0 && (
+                <div
+                  className={`flex items-center space-x-1 ${currentStep === "summary" ? "text-primary font-medium" : ""}`}
                 >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Editar Productos</span>
-                </Button>
+                  <FileText className="w-3 h-3" />
+                  <span>Resumen</span>
+                </div>
               )}
             </div>
           </div>

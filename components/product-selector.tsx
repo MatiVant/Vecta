@@ -199,50 +199,51 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
           <CardContent>
             <div className="space-y-4">
               {orderItems.map((item) => (
-                <div
-                  key={item.product.id}
-                  className="flex items-center justify-between p-4 border border-border rounded-lg"
-                >
-                  <div className="flex-1">
-                    <h4 className="font-medium">{item.product.name}</h4>
-                    <p className="text-sm text-muted-foreground">Código: {item.product.code}</p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-
-                      <Input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) => updateQuantity(item.product.id, Number.parseInt(e.target.value) || 0)}
-                        className="w-20 text-center"
-                        min="1"
-                      />
-
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
+                <div key={item.product.id} className="p-4 border border-border rounded-lg space-y-3 sm:space-y-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium">{item.product.name}</h4>
+                      <p className="text-sm text-muted-foreground">Código: {item.product.code}</p>
                     </div>
 
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeItem(item.product.id)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+
+                        <Input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => updateQuantity(item.product.id, Number.parseInt(e.target.value) || 0)}
+                          className="w-16 sm:w-20 text-center text-sm"
+                          min="1"
+                        />
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      <div className="flex justify-center sm:justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeItem(item.product.id)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -252,13 +253,13 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
+      <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
+        <Button variant="outline" onClick={onBack} className="w-full sm:w-auto bg-transparent">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver a Cliente
         </Button>
 
-        <Button onClick={handleContinue} disabled={orderItems.length === 0}>
+        <Button onClick={handleContinue} disabled={orderItems.length === 0} className="w-full sm:w-auto">
           Continuar al Resumen
         </Button>
       </div>
