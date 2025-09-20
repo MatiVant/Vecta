@@ -1,10 +1,10 @@
 export interface FetchOptions {
-  endpoint: string // Changed from 'url' to 'endpoint' to use with base URL
+  endpoint: string
   mockData: any[]
   errorMessage?: string
 }
 
-const API_BASE_URL = "http://localhost:3000"
+const API_BASE_URL = "http://45.7.230.46:3001"
 
 export async function fetchWithFallback<T>({ endpoint, mockData, errorMessage }: FetchOptions): Promise<{
   data: T[]
@@ -12,7 +12,7 @@ export async function fetchWithFallback<T>({ endpoint, mockData, errorMessage }:
   connectionError: boolean
 }> {
   try {
-    const url = `${API_BASE_URL}${endpoint}` // Construct full URL with base URL
+    const url = `${API_BASE_URL}${endpoint}`
     console.log("[v0] Attempting to fetch from:", url)
 
     const response = await fetch(url)
@@ -39,7 +39,7 @@ export async function fetchWithFallback<T>({ endpoint, mockData, errorMessage }:
     return {
       data: mockData,
       usingMockData: true,
-      connectionError: false, // No mostrar error, solo usar mock
+      connectionError: false,
     }
   }
 }
