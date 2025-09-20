@@ -4,7 +4,7 @@ export interface FetchOptions {
   errorMessage?: string
 }
 
-const API_BASE_URL = "http://45.7.230.46:3001"
+const API_BASE_URL = "https://api-molino.tera.ar"
 
 export async function fetchWithFallback<T>({ endpoint, mockData, errorMessage }: FetchOptions): Promise<{
   data: T[]
