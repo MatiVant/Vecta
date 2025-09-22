@@ -294,13 +294,13 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
 
       {/* Navigation Buttons */}
       <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0">
-        <Button variant="outline" onClick={onBack} className="w-full sm:w-auto bg-transparent">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver a Cliente
-        </Button>
 
         <Button onClick={handleContinue} disabled={orderItems.length === 0} className="w-full sm:w-auto">
           Continuar al Resumen
+        </Button>
+        <Button variant="outline" onClick={onBack} className="w-full sm:w-auto bg-transparent">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Volver a Cliente
         </Button>
       </div>
     </div>
