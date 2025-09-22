@@ -72,7 +72,7 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
         items.map((item) => (item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)),
       )
     } else {
-      setOrderItems((items) => [...items, { product, quantity: 1 }])
+      setOrderItems((items) => [...items, { product, quantity: 1, unit: "unidades", observations: "" }])
     }
 
     setSearchTerm("")
@@ -99,6 +99,14 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
 
   const removeItem = (productId: number) => {
     setOrderItems((items) => items.filter((item) => item.product.id !== productId))
+  }
+
+  const updateUnit = (productId: number, unit: "unidades" | "pallets") => {
+    setOrderItems((items) => items.map((item) => (item.product.id === productId ? { ...item, unit } : item)))
+  }
+
+  const updateObservations = (productId: number, observations: string) => {
+    setOrderItems((items) => items.map((item) => (item.product.id === productId ? { ...item, observations } : item)))
   }
 
   const handleContinue = () => {
@@ -199,7 +207,7 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
           <CardContent>
             <div className="space-y-4">
               {orderItems.map((item) => (
-                <div key={item.product.id} className="p-4 border border-border rounded-lg space-y-3 sm:space-y-0">
+                <div key={item.product.id} className="p-4 border border-border rounded-lg space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1">
                       <h4 className="font-medium">{item.product.name}</h4>
@@ -243,6 +251,38 @@ export function ProductSelector({ client, onProductsComplete, onBack, initialIte
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Unit Selector and Observations Input */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-border">
+                    <div>
+                      <Label htmlFor={`unit-${item.product.id}`} className="text-sm font-medium">
+                        Unidad
+                      </Label>
+                      <select
+                        id={`unit-${item.product.id}`}
+                        value={item.unit}
+                        onChange={(e) => updateUnit(item.product.id, e.target.value as "unidades" | "pallets")}
+                        className="mt-1 w-full px-3 py-2 text-sm border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                      >
+                        <option value="unidades">Unidades</option>
+                        <option value="pallets">Pallets</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor={`obs-${item.product.id}`} className="text-sm font-medium">
+                        Observaciones
+                      </Label>
+                      <Input
+                        id={`obs-${item.product.id}`}
+                        type="text"
+                        placeholder="Observaciones del producto..."
+                        value={item.observations || ""}
+                        onChange={(e) => updateObservations(item.product.id, e.target.value)}
+                        className="mt-1"
+                      />
                     </div>
                   </div>
                 </div>

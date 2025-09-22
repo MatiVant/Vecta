@@ -26,6 +26,8 @@ export type Product = {
 export type OrderItem = {
   product: Product
   quantity: number
+  unit: "unidades" | "pallets"
+  observations?: string
 }
 
 type OrderStep = "client" | "products" | "summary"

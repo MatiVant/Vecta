@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { Separator } from "./ui/separator"
+import { Label } from "./ui/label"
+import { Input } from "./ui/input"
 import type { Client, OrderItem } from "./order-form"
 
 interface OrderSummaryProps {
@@ -24,6 +26,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderSubmitted, setOrderSubmitted] = useState(false)
   const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null)
+  const [orderObservations, setOrderObservations] = useState("")
 
   const totalItems = orderItems.reduce((sum, item) => sum + item.quantity, 0)
 
@@ -34,6 +37,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
       const orderData = {
         client: client,
         items: orderItems,
+        observations: orderObservations,
         createdAt: new Date().toISOString(),
       }
 
@@ -65,7 +69,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
   const handleDownloadPDF = async () => {
     try {
       if (orderResponse?.pdfUrl) {
-        // If backend provides PDF URL, download it directly
         const link = document.createElement("a")
         link.href = orderResponse.pdfUrl
         link.download = `pedido-${orderResponse.id}.pdf`
@@ -73,12 +76,10 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
         link.click()
         document.body.removeChild(link)
       } else {
-        // Fallback: generate PDF client-side using browser print
         generateClientSidePDF()
       }
     } catch (error) {
       console.error("Error downloading PDF:", error)
-      // Fallback to client-side generation
       generateClientSidePDF()
     }
   }
@@ -98,7 +99,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
     }
 
     img.onerror = () => {
-      // Fallback: generate PDF without logo if image fails to load
       generatePDFWithLogo("")
     }
 
@@ -107,7 +107,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
   }
 
   const generatePDFWithLogo = (logoBase64: string) => {
-    // Create a new window with the order content for printing
     const printWindow = window.open("", "_blank")
     if (printWindow) {
       const orderDate = new Date().toLocaleDateString("es-ES")
@@ -157,8 +156,8 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
               text-align: center;
               width: 100%;
             }
-            .client-info, .order-items { margin-bottom: 30px; }
-            .client-info h3, .order-items h3 { 
+            .client-info, .order-items, .order-observations { margin-bottom: 30px; }
+            .client-info h3, .order-items h3, .order-observations h3 { 
               color: #000000; 
               border-bottom: 1px solid #d1d5db; 
               padding-bottom: 10px; 
@@ -168,10 +167,11 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             .info-label { font-weight: bold; color: #6b7280; font-size: 12px; }
             .info-value { margin-top: 2px; }
             .item { border: 1px solid #d1d5db; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-            .item-header { display: flex; justify-content: space-between; align-items: center; }
+            .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
             .item-name { font-weight: bold; }
             .item-code { color: #6b7280; font-size: 14px; }
             .quantity { font-weight: bold; color: #000000; }
+            .item-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
             .summary { 
               background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%); 
               padding: 20px; 
@@ -265,13 +265,38 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
                     <div class="item-name">${item.product.name}</div>
                     <div class="item-code">Código: ${item.product.code}</div>
                   </div>
-                  <div class="quantity">Cantidad: ${item.quantity}</div>
+                  <div class="quantity">Cantidad: ${item.quantity} ${item.unit}</div>
                 </div>
+                ${
+                  item.observations
+                    ? `
+                <div class="item-details">
+                  <div>
+                    <div class="info-label">OBSERVACIONES</div>
+                    <div class="info-value">${item.observations}</div>
+                  </div>
+                </div>
+                `
+                    : ""
+                }
               </div>
             `,
               )
               .join("")}
           </div>
+          
+          ${
+            orderObservations
+              ? `
+          <div class="order-observations">
+            <h3>Observaciones del Pedido</h3>
+            <div style="padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 5px;">
+              ${orderObservations}
+            </div>
+          </div>
+          `
+              : ""
+          }
           
           <div class="summary">
             <div class="total">Total de Productos: ${totalItems}</div>
@@ -289,7 +314,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
       printWindow.document.close()
 
-      // Wait for content to load then print
       setTimeout(() => {
         printWindow.print()
         printWindow.close()
@@ -355,7 +379,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Client Information */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <User className="w-4 h-4" />
@@ -381,7 +404,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
           <Separator />
 
-          {/* Order Items */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -397,8 +419,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
               {orderItems.map((item) => (
                 <Card key={item.product.id} className="bg-gray-50/50 border-gray-200">
                   <CardContent className="pt-4">
-                    {/* Mobile-first vertical layout */}
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                         <div className="flex-1">
                           <h4 className="font-medium text-sm sm:text-base">{item.product.name}</h4>
@@ -407,10 +428,17 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
                         <div className="flex items-center justify-between sm:justify-end sm:flex-col sm:items-end gap-2">
                           <span className="text-xs text-muted-foreground sm:hidden">Cantidad:</span>
                           <Badge variant="outline" className="font-medium">
-                            {item.quantity} {item.quantity === 1 ? "unidad" : "unidades"}
+                            {item.quantity} {item.unit}
                           </Badge>
                         </div>
                       </div>
+
+                      {item.observations && (
+                        <div className="pt-2 border-t border-gray-200">
+                          <p className="text-xs text-muted-foreground font-medium">Observaciones:</p>
+                          <p className="text-sm text-gray-700 mt-1">{item.observations}</p>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -420,7 +448,22 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
           <Separator />
 
-          {/* Order Summary */}
+          <div>
+            <Label htmlFor="order-observations" className="text-sm font-medium">
+              Observaciones del Pedido
+            </Label>
+            <Input
+              id="order-observations"
+              type="text"
+              placeholder="Observaciones generales del pedido..."
+              value={orderObservations}
+              onChange={(e) => setOrderObservations(e.target.value)}
+              className="mt-2"
+            />
+          </div>
+
+          <Separator />
+
           <div className="bg-green-50/50 border border-green-200 p-4 rounded-lg">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
               <span className="font-medium">Total de Productos:</span>
@@ -433,7 +476,6 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
         </CardContent>
       </Card>
 
-      {/* Navigation Buttons */}
       <div className="flex flex-col sm:flex-row justify-between gap-3">
         <Button variant="outline" onClick={onBack} className="order-2 sm:order-1 bg-transparent">
           <ArrowLeft className="w-4 h-4 mr-2" />
