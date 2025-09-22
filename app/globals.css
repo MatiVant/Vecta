@@ -4,40 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color tokens for Molinos Indelma brand (red and gold) */
+  /* Updated color tokens for Molinos Indelma brand (black and gold) */
   --background: #ffffff;
-  --foreground: #c8102e;
+  --foreground: #000000;
   --card: #f8f8f8;
-  --card-foreground: #c8102e;
+  --card-foreground: #000000;
   --popover: #ffffff;
   --popover-foreground: #374151;
-  --primary: #c8102e;
+  --primary: #000000;
   --primary-foreground: #ffffff;
   --secondary: #ffd700;
   --secondary-foreground: #374151;
   --muted: #f8f8f8;
   --muted-foreground: #374151;
   --accent: #ffd700;
-  --accent-foreground: #c8102e;
+  --accent-foreground: #000000;
   --destructive: #ff4d4d;
   --destructive-foreground: #ffffff;
   --border: #e5e5e5;
   --input: #ffffff;
-  --ring: rgba(200, 16, 46, 0.5);
-  --chart-1: #c8102e;
+  --ring: rgba(0, 0, 0, 0.5);
+  --chart-1: #000000;
   --chart-2: #ffd700;
   --chart-3: #f8f8f8;
   --chart-4: #b0b0b0;
   --chart-5: #e5e5e5;
   --radius: 0.5rem;
   --sidebar: #f8f8f8;
-  --sidebar-foreground: #c8102e;
+  --sidebar-foreground: #000000;
   --sidebar-primary: #ffd700;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #c8102e;
+  --sidebar-accent: #000000;
   --sidebar-accent-foreground: #ffd700;
   --sidebar-border: #e5e5e5;
-  --sidebar-ring: rgba(200, 16, 46, 0.5);
+  --sidebar-ring: rgba(0, 0, 0, 0.5);
 }
 
 .dark {
@@ -48,32 +48,32 @@
   --card-foreground: #ffd700;
   --popover: #2a2a2a;
   --popover-foreground: #ffd700;
-  --primary: #c8102e;
+  --primary: #000000;
   --primary-foreground: #ffffff;
   --secondary: #ffd700;
   --secondary-foreground: #1a1a1a;
   --muted: #2a2a2a;
   --muted-foreground: #b0b0b0;
   --accent: #ffd700;
-  --accent-foreground: #c8102e;
+  --accent-foreground: #000000;
   --destructive: #ff4d4d;
   --destructive-foreground: #ffffff;
   --border: #404040;
   --input: #2a2a2a;
-  --ring: rgba(200, 16, 46, 0.5);
-  --chart-1: #c8102e;
+  --ring: rgba(0, 0, 0, 0.5);
+  --chart-1: #000000;
   --chart-2: #ffd700;
   --chart-3: #f8f8f8;
   --chart-4: #b0b0b0;
   --chart-5: #e5e5e5;
   --sidebar: #1a1a1a;
   --sidebar-foreground: #ffd700;
-  --sidebar-primary: #c8102e;
+  --sidebar-primary: #000000;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #2a2a2a;
   --sidebar-accent-foreground: #ffd700;
   --sidebar-border: #404040;
-  --sidebar-ring: rgba(200, 16, 46, 0.5);
+  --sidebar-ring: rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
@@ -140,10 +140,10 @@
 @keyframes soft-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(200, 16, 46, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   }
   50% {
-    box-shadow: 0 0 30px rgba(200, 16, 46, 0.4);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
   }
 }
 

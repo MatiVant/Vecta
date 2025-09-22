@@ -115,7 +115,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
       const logoHtml = logoBase64
         ? `<img src="${logoBase64}" alt="Molinos Indelma" class="logo" />`
-        : `<div class="logo-placeholder" style="width: 80px; height: 60px; background: #dc2626; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">INDELMA</div>`
+        : `<div class="logo-placeholder" style="width: 80px; height: 60px; background: #000000; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">INDELMA</div>`
 
       printWindow.document.write(`
         <!DOCTYPE html>
@@ -127,7 +127,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             .header { 
               position: relative;
               margin-bottom: 30px; 
-              border-bottom: 2px solid #dc2626; 
+              border-bottom: 2px solid #000000; 
               padding-bottom: 20px; 
               min-height: 80px;
             }
@@ -144,7 +144,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
               top: 0;
               width: 140px; 
               height: 60px; 
-              background: #dc2626; 
+              background: #000000; 
               border-radius: 5px; 
               display: flex; 
               align-items: center; 
@@ -159,7 +159,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             }
             .client-info, .order-items { margin-bottom: 30px; }
             .client-info h3, .order-items h3 { 
-              color: #dc2626; 
+              color: #000000; 
               border-bottom: 1px solid #d1d5db; 
               padding-bottom: 10px; 
             }
@@ -171,7 +171,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
             .item-header { display: flex; justify-content: space-between; align-items: center; }
             .item-name { font-weight: bold; }
             .item-code { color: #6b7280; font-size: 14px; }
-            .quantity { font-weight: bold; color: #dc2626; }
+            .quantity { font-weight: bold; color: #000000; }
             .summary { 
               background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%); 
               padding: 20px; 
@@ -179,13 +179,13 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
               text-align: center; 
               border: 1px solid #f59e0b;
             }
-            .total { font-size: 18px; font-weight: bold; color: #dc2626; }
+            .total { font-size: 18px; font-weight: bold; color: #000000; }
             .footer { 
               margin-top: 40px; 
               text-align: center; 
               color: #6b7280; 
               font-size: 12px; 
-              border-top: 1px solid #dc2626;
+              border-top: 1px solid #000000;
               padding-top: 20px;
             }
           </style>
@@ -194,7 +194,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
           <div class="header">
             ${logoHtml}
             <div class="header-text">
-              <h1 style="color: #dc2626; margin: 0;">PEDIDO</h1>
+              <h1 style="color: #000000; margin: 0;">PEDIDO</h1>
               <p style="margin: 5px 0;">Fecha: ${orderDate} - Hora: ${orderTime}</p>
               ${orderResponse?.id ? `<p style="margin: 5px 0;">ID: ${orderResponse.id}</p>` : ""}
             </div>
@@ -315,7 +315,7 @@ export function OrderSummary({ client, orderItems, onBack }: OrderSummaryProps) 
 
           <Button className="w-full text-sm" onClick={handleDownloadPDF}>
             <Download className="w-4 h-4 mr-2" />
-            Descargar PDF 
+            Descargar PDF
           </Button>
 
           <Button variant="outline" onClick={() => window.location.reload()}>
